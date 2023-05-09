@@ -145,5 +145,3 @@ for temperature in weather_updates(stub):
 
 
 
-
-
