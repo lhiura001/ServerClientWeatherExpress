@@ -109,6 +109,40 @@ json_response = {
 print(json_response)
 ```
 
+Receiving Data from the Weather Microservice
+
+The Weather microservice can also send data to clients using gRPC's streaming capabilities. To receive data from the microservice in real-time, you can use the server-side streaming feature to stream weather updates to your client. Here are the steps:
+
+1. Define a streaming RPC method in the Weather service that sends weather updates to clients.
+2. Implement the streaming method on the server side to send weather updates at regular intervals.
+3. Use the gRPC client code to call the streaming method on the server and receive the weather updates.
+
+Here's an example of how to receive weather updates in Python:
+
+```python
+import grpc
+import weather_pb2
+import weather_pb2_grpc
+
+def weather_updates(stub):
+    """
+    A generator function that receives weather updates from the server.
+    """
+    request = weather_pb2.WeatherRequest(city='San Francisco')
+    for response in stub.StreamWeather(request):
+        yield response.temperature
+
+# create a gRPC channel and stub
+channel = grpc.insecure_channel('localhost:50051')
+stub = weather_pb2_grpc.WeatherStub(channel)
+
+# call the weather_updates generator function to receive weather updates
+for temperature in weather_updates(stub):
+    print('Current temperature in San Francisco: ', temperature)
+    
+   ```
+
+
 
 
 
