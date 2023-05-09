@@ -144,7 +144,7 @@ for temperature in weather_updates(stub):
    
 # UML Sequence Diagram
 
-![alt text](UML.png)
+![alt text](uml.png)
 
 1. The client sends a request for weather data to the WeatherService.
 2. The WeatherService receives the request and retrieves the relevant weather data.
