@@ -141,6 +141,17 @@ for temperature in weather_updates(stub):
     print('Current temperature in San Francisco: ', temperature)
     
    ```
+   
+# UML Sequence Diagram
+
+![alt text](UML.png)
+
+1. The client sends a request for weather data to the WeatherService.
+2. The WeatherService receives the request and retrieves the relevant weather data.
+3. The WeatherService creates a WeatherResponse message containing the weather data.
+4. The WeatherService sends the WeatherResponse message to the client.
+5. The client receives the WeatherResponse message containing the weather data.
+
 
 
 
