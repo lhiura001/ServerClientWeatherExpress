@@ -53,14 +53,14 @@ def serve():
     health_pb2_grpc.add_HealthServicer_to_server(health_servicer, server)
 
     # Start the gRPC-Gateway server
-    gateway_port = 8080
+    gateway_port = 8081
     HOST = 'localhost'
-    PORT = 8080
+    PORT = 8081
     gateway_server = http_server.HTTPServer((HOST, PORT), http_server.SimpleHTTPRequestHandler)
     gateway_server.serve_forever()
 
     # Print the gRPC-Gateway URL
-    print("gRPC-Gateway listening on http://localhost:{}/".format(gateway_port))
+    print("gRPC-Gateway listening on http://{}:{}/".format(HOST, gateway_port))
 
     # Wait for the gRPC server to terminate
     server.wait_for_termination()
