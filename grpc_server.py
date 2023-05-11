@@ -1,8 +1,18 @@
 import grpc
+import pandas as pd
 from concurrent import futures
 import weather_pb2
 import weather_pb2_grpc
 import weather 
+
+# Import the gRPC-Gateway package
+from http import server as http_server
+from grpc import server as grpc_server
+from grpc_health.v1 import health_pb2, health_pb2_grpc
+from google.protobuf.json_format import MessageToJson
+from grpc_health.v1 import health_pb2
+from grpc_health.v1 import health_pb2_grpc
+
 
 class WeatherServicer(weather_pb2_grpc.WeatherServiceServicer):
 
@@ -30,10 +40,29 @@ class WeatherServicer(weather_pb2_grpc.WeatherServiceServicer):
         )
 
 def serve():
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    # Create the gRPC server
+    server = grpc_server(futures.ThreadPoolExecutor(max_workers=10))
     weather_pb2_grpc.add_WeatherServiceServicer_to_server(WeatherServicer(), server)
     server.add_insecure_port('[::]:50051')
+    
+    # Start the gRPC server
     server.start()
+    
+    # Create the gRPC health check service
+    health_servicer = health_pb2_grpc.HealthServicer()
+    health_pb2_grpc.add_HealthServicer_to_server(health_servicer, server)
+
+    # Start the gRPC-Gateway server
+    gateway_port = 8080
+    HOST = 'localhost'
+    PORT = 8080
+    gateway_server = http_server.HTTPServer((HOST, PORT), http_server.SimpleHTTPRequestHandler)
+    gateway_server.serve_forever()
+
+    # Print the gRPC-Gateway URL
+    print("gRPC-Gateway listening on http://localhost:{}/".format(gateway_port))
+
+    # Wait for the gRPC server to terminate
     server.wait_for_termination()
 
 if __name__ == '__main__':

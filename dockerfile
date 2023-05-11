@@ -9,9 +9,6 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
-
-
-
 # Expose the port used by the gRPC server
 EXPOSE 50051
 

@@ -1,0 +1,43 @@
+files:
+  "/etc/systemd/system/grpc-server.service":
+    mode: "000644"
+    owner: root
+    group: root
+    content: |
+      [Unit]
+      Description=My gRPC server
+      After=network.target
+
+      [Service]
+      User=ec2-user
+      Type=simple
+      WorkingDirectory=/var/app/current
+      ExecStart=/usr/local/bin/python3 server.py
+      Restart=always
+
+  "/etc/systemd/system/grpc-client.service":
+    mode: "000644"
+    owner: root
+    group: root
+    content: |
+      [Unit]
+      Description=My gRPC client
+      After=network.target
+
+      [Service]
+      User=ec2-user
+      Type=simple
+      WorkingDirectory=/var/app/current
+      ExecStart=/usr/local/bin/python3 client.py
+      Restart=always
+
+commands:
+  01_install_grpc_dependencies:
+    command: "pip install grpcio grpcio-tools"
+
+  02_restart_systemd:
+    command: "systemctl daemon-reload"
+
+option_settings:
+  "aws:elasticbeanstalk:container:python":
+    WSGIPath: "app.py"
